@@ -1,0 +1,15 @@
+pandas
+numpy
+scikit-learn
+nltk
+spacy
+sentence-transformers
+transformers
+torch
+langdetect
+geopy
+rapidfuzz
+matplotlib
+seaborn
+tqdm
+streamlit
