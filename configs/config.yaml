@@ -1,5 +1,8 @@
 project_name: "city_conflict_risk_nlp"
 seed: 42
+structured_path: "data/raw/MiddleEast.csv"
+merge_bucket_strategy: "latest"  # or "config"
+merge_bucket_value: null
 
 date_range:
   start: "2024-01-01"
