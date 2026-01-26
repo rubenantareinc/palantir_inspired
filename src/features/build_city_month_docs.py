@@ -42,7 +42,6 @@ def main(cfg_path: str = "configs/config.yaml") -> None:
     freq = cfg["bucketing"]["freq"]
     cues = cfg["conflict_cues"]
     min_doc_len = int(cfg["features"]["min_doc_length"])
-    q = float(cfg["labeling"]["high_risk_quantile"])
 
     df["seendate"] = pd.to_datetime(df["seendate"], errors="coerce")
     df = df.dropna(subset=["seendate"])
@@ -74,18 +73,9 @@ def main(cfg_path: str = "configs/config.yaml") -> None:
     if docs.empty:
         raise ValueError("All docs filtered out. Lower min_doc_length or fetch more articles.")
 
-    # Forward-looking synthetic label: next bucket cue_sum
-    docs["cue_next"] = docs.groupby("city")["cue_sum"].shift(-1)
-    docs = docs.dropna(subset=["cue_next"])
-    docs["cue_next"] = docs["cue_next"].astype(int)
-
-    thresh = float(docs["cue_next"].quantile(q))
-    docs["high_risk"] = (docs["cue_next"] >= thresh).astype(int)
-
     out_dir = ensure_dir("data/processed")
     save_csv(docs, Path(out_dir) / "city_bucket_docs.csv")
     print(f"Saved city-bucket docs -> {Path(out_dir) / 'city_bucket_docs.csv'}")
-    print(f"High risk threshold (quantile {q}): cue_next >= {thresh:.2f}")
 
 if __name__ == "__main__":
     main()

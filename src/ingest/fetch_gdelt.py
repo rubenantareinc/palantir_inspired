@@ -55,7 +55,16 @@ def main(cfg_path: str = "configs/config.yaml") -> None:
     query_spine = cfg["gdelt"]["query_spine"]
     maxrecords = int(cfg["gdelt"]["maxrecords_per_city"])
     sort = cfg["gdelt"]["sort"]
-    cities = cfg["cities"]
+    cities_path = Path("data/processed/cities.txt")
+    if cities_path.exists():
+        with cities_path.open("r", encoding="utf-8") as f:
+            cities = [line.strip() for line in f if line.strip()]
+        if not cities:
+            raise ValueError("cities.txt is empty. Re-run load_structured to populate it.")
+        print(f"Using {len(cities):,} cities from {cities_path}")
+    else:
+        cities = cfg["cities"]
+        print("Using cities from config.yaml")
 
     raw_dir = ensure_dir("data/raw")
     all_rows = []
