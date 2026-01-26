@@ -1,4 +1,4 @@
-.PHONY: setup structured fetch features merge train_regression train_classification
+.PHONY: setup structured fetch features merge train_regression train_classification ablate_regression
 
 setup:
 	pip install -r requirements.txt
@@ -20,3 +20,9 @@ train_regression:
 
 train_classification:
 	python -m src.models.train_baseline --task classification --features combined
+
+ablate_regression:
+	python -m src.models.train_baseline --task regression --features structured_only
+	python -m src.models.train_baseline --task regression --features text_only
+	python -m src.models.train_baseline --task regression --features combined
+
